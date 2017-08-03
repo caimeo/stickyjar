@@ -513,7 +513,10 @@ func (j *Jar) domainAndType(host, domain string) (string, bool, error) {
 
 //if the file has been updated since the last time we wrote to it
 func (j *Jar) fileWasUpdated() bool {
-	fi, _ := os.Stat(j.cookieFileName)
+	fi, err := os.Stat(j.cookieFileName)
+	if err != nil {
+		return false
+	}
 	return (fi.ModTime().Unix() > j.lastFileMod.Unix())
 }
 
