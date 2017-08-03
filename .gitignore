@@ -15,7 +15,7 @@
 
 .settings
 .DS_Store
-/cookieCurl
+/stickyjar
 
 # cookie jar files
 *.cj

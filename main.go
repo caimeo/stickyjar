@@ -4,9 +4,9 @@ package main
 import (
 	"flag"
 
-	"github.com/caimeo/cookieCurl/curlcookie"
-	"github.com/caimeo/cookieCurl/tracer"
 	"github.com/caimeo/iniflags"
+	"github.com/caimeo/stickyjar/curljar"
+	"github.com/caimeo/stickyjar/tracer"
 )
 
 var verboseMode = flag.Bool("verbose", false, "Verbose trace output.")

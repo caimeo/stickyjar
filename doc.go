@@ -1,6 +1,6 @@
-// cookieCurl project doc.go
+// stickyjar project doc.go
 
 /*
-cookieCurl document
+stickyjar document
 */
 package main
