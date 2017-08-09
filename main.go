@@ -22,13 +22,13 @@ func main() {
 
 	cookieFile = *cookieFileP
 
-	t := tracer.New(false)
+	t := tracer.New(*verboseMode)
 
 	t.Always("Cookie Curl")
 	t.Always(cookieFile)
 
-	curlcookie.New(cookieFile, nil)
+	cj, _ := curljar.New(cookieFile, nil)
 
-	//	fmt.Printf(cj.String())
+	t.Verbose(cj.String())
 
 }

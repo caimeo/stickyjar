@@ -1,9 +1,12 @@
+// Copyright 2017 Caimeo MIT License
+// Derived work from GO
+
 // Copyright 2012 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 // Package cookiejar implements an in-memory RFC 6265-compliant http.CookieJar.
-package curlcookie
+package curljar
 
 import (
 	"encoding/csv"
@@ -545,6 +548,10 @@ func (j *Jar) String() (s string) {
 		}
 	}
 	return s
+}
+
+func (j *Jar) Restore() {
+	j.readFromDisk()
 }
 
 //reads all cookies from disk into memory
