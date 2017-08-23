@@ -6,14 +6,14 @@ import (
 
 	"github.com/caimeo/iniflags"
 	"github.com/caimeo/stickyjar/curljar"
-	"github.com/caimeo/stickyjar/tracer"
+	"github.com/caimeo/stickyjar/simple"
 )
 
 var verboseMode = flag.Bool("verbose", false, "Verbose trace output.")
 var cookieFileP = flag.String("file", "", "Cookiejar file")
 var cookieFile string
 
-var t tracer.Tracer
+var t simple.Console
 
 func main() {
 	iniflags.SetConfigFile(".settings")
@@ -22,7 +22,7 @@ func main() {
 
 	cookieFile = *cookieFileP
 
-	t := tracer.New(*verboseMode)
+	t := simple.NewConsole(*verboseMode)
 
 	t.Always("Cookie Curl")
 	t.Always(cookieFile)
