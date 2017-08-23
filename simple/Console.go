@@ -7,16 +7,25 @@ type Console struct {
 }
 
 func (t *Console) Verbose(args ...interface{}) {
+	if t == nil {
+		return
+	}
 	if t.verbose {
 		t.Always(args...)
 	}
 }
 
 func (t *Console) Always(args ...interface{}) {
+	if t == nil {
+		return
+	}
 	fmt.Println(args)
 }
 
 func (t *Console) IsVerbose() bool {
+	if t == nil {
+		return false
+	}
 	return t.verbose
 }
 
