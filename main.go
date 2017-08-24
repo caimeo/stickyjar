@@ -10,6 +10,7 @@ import (
 )
 
 var verboseMode = flag.Bool("verbose", false, "Verbose trace output.")
+var debugMode = flag.Bool("debug", false, "Debug trace output.")
 var cookieFileP = flag.String("file", "", "Cookiejar file")
 var cookieFile string
 
@@ -22,7 +23,7 @@ func main() {
 
 	cookieFile = *cookieFileP
 
-	t := simple.NewConsole(*verboseMode)
+	t := simple.NewConsole(*verboseMode, *debugMode)
 
 	t.Always("Cookie Curl")
 	t.Always(cookieFile)
