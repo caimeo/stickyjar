@@ -80,6 +80,9 @@ type Jar struct {
 	// nextSeqNum is the next sequence number assigned to a new cookie
 	// created SetCookies.
 	nextSeqNum uint64
+
+	mux2 sync.Mutex
+	mux3 sync.Mutex
 }
 
 // New returns a new cookie jar. A nil *Options is equivalent to a zero
@@ -514,13 +517,17 @@ func (j *Jar) domainAndType(host, domain string) (string, bool, error) {
 	return domain, false, nil
 }
 
-//if the file has been updated since the last time we wrote to it
+//if the file has been updated since the last time we wrote to it (plus 10 seconds)
 func (j *Jar) fileWasUpdated() bool {
+	j.mux2.Lock()
+	defer j.mux2.Unlock()
+
 	fi, err := os.Stat(j.cookieFileName)
 	if err != nil {
 		return false
 	}
-	return (fi.ModTime().Unix() > j.lastFileMod.Unix())
+	wasupdated := (fi.ModTime().Unix() > (j.lastFileMod.Unix() + 10))
+	return wasupdated
 }
 
 //writes all current in memory cookies to disk
@@ -531,6 +538,7 @@ func (j *Jar) writeToDisk() {
 
 	fi, _ := os.Stat(j.cookieFileName)
 	j.lastFileMod = fi.ModTime()
+	fmt.Println("WTD", j.lastFileMod.Unix())
 }
 
 //write the cookie file string
@@ -556,11 +564,17 @@ func (j *Jar) Restore() {
 
 //reads all cookies from disk into memory
 func (j *Jar) readFromDisk() {
+	j.mux2.Lock()
+	defer j.mux2.Unlock()
+
 	records, _ := j.readCookieRecordsFromDisk()
 	if len(records) == 0 {
 		return
 	}
 	j.setEntriesFromRecords(records)
+	fi, _ := os.Stat(j.cookieFileName)
+
+	j.lastFileMod = fi.ModTime()
 }
 
 // read the cookie file from disk and parse it into a series of records
@@ -583,6 +597,7 @@ func (j Jar) setEntriesFromRecords(records [][]string) {
 	for _, v := range records {
 		if !strings.HasPrefix(v[0], "#") {
 			if len(v) == 7 {
+				j.mux3.Lock()
 				//this is probably a cookie record
 				e, _ := j.entryFromCookieRecord(v)
 
@@ -614,6 +629,7 @@ func (j Jar) setEntriesFromRecords(records [][]string) {
 				} else {
 					j.entries[key] = submap
 				}
+				j.mux3.Unlock()
 			}
 
 		}
