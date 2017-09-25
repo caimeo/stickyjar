@@ -538,7 +538,6 @@ func (j *Jar) writeToDisk() {
 
 	fi, _ := os.Stat(j.cookieFileName)
 	j.lastFileMod = fi.ModTime()
-	fmt.Println("WTD", j.lastFileMod.Unix())
 }
 
 //write the cookie file string
